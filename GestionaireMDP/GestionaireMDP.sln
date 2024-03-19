@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestionaireMDP", "GestionaireMDP\GestionaireMDP.csproj", "{0C037C97-F177-445A-8803-DAE78AE1BEDC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0C037C97-F177-445A-8803-DAE78AE1BEDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C037C97-F177-445A-8803-DAE78AE1BEDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C037C97-F177-445A-8803-DAE78AE1BEDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C037C97-F177-445A-8803-DAE78AE1BEDC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D9DF029A-7A6D-4813-A25E-9AE3D4319A28}
+	EndGlobalSection
+EndGlobal
