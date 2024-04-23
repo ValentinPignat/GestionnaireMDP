@@ -4,17 +4,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+// TODO REPLACE -1 by const
+//  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA SEPARATOR MIGHT BE GENERATED FROM ENCRYPTION
+// Utiliser ASCII sans controle voir :https://stackoverflow.com/questions/887377/how-do-i-get-a-list-of-all-the-printable-characters-in-c
+// Dont take control character input 
+// Manage wrong file path -- alternative
 
 namespace GestionaireMDP
 {
+
     internal class Program
     {
+        public const int INDEX_NOT_FOUND = -1;
 
         static void Main(string[] args)
         {
-            // Separator used in the txt file
-            const char SEPARATOR = ' ';
+           // Unfound index
 
+
+            // Line
+            const string LINE = "*******************************************";
             // Main menu
             const string MENU = "*******************************************\n"+
                                 "Sélectionnez une action\n" +
@@ -24,7 +33,7 @@ namespace GestionaireMDP
                                 "4: Modifier un mot de passe\n" +
                                 "5: Quitter le programme\n" +
                                 "*******************************************\n\n" +
-                                "Faites votre choix :";
+                                "Faites votre choix : ";
 
             // Modify menu
             const string MODIFY_MENU = "*******************************************\n" +
@@ -35,65 +44,33 @@ namespace GestionaireMDP
                                 "4: Retour au menu principal\n" +
                                 "*******************************************\n\n";
 
-            // Index of each element in an entry string[site, username, password]
-            const int SITE_INDEX = 0;
-            const int USERNAME_INDEX = 1;
-            const int PASSWORD_INDEX = 2;
-
+            
             // user input variable
             ConsoleKey input;
 
-            // Ensemble du contenu du fichier text
-            string content = "";
+            // Initialize password manager
+            PWManager pwManager = new PWManager();
 
-            // List of lines and list of passwords string[site, username, password]
-            List<string> lines = new List<string>();
-            List<string[]> entries = new List<string[]>();
+            // TEST
+            /*
+            while (true) {
+                //string test = Console.ReadLine();
+                //Console.Write(ReverseKey(test));
+                string S = Console.ReadLine();
+                string reversed = pwManager.Vigenere(toVig: S);
+                string back = pwManager.Vigenere(toVig: S, reversed: true);
 
+            }*/
             
-            // File Path
-            const string PATH = @"C:\Users\pe41oyl\Desktop\passwords.txt";
-
-            // If file doesn't exist create it
-            while (!File.Exists(PATH))
-            {
-                try
-                {
-                    File.Create(PATH);
-                }
-                // If the path is incorect, warning and exit
-                catch {
-                        Console.WriteLine("Le chemin de fichier par défaut n'existe pas");
-                        Console.ReadKey();
-                        Environment.Exit(0);
-                
-                }
-            }
-
-            // Get txt file content as a string and then split it into lines 
-            content = File.ReadAllText(PATH);
-            lines = content.Split('\n').ToList();
-
-            // For each of the lines split it in 3 strings (site, username, password) using the SEPARATOR
-            foreach (string line in lines)
-            {
-                string[] fullEntry = line.TrimEnd().Split(SEPARATOR);
-
-                // If an entry isn't conform, it'll not be saved in the entries and thus removed at the next update
-                if (fullEntry.Length == 3) {
-                    Console.WriteLine(line);
-                    entries.Add(fullEntry);
-                }
-            }
-
             // Main menu loop - Start
             while (true)
             {
 
                 // Clear, displays menu and take input
                 Console.Clear();
-                Console.WriteLine(MENU);
+                Console.Write(MENU);
                 input = Console.ReadKey().Key;
+                Console.WriteLine();
 
                 // Switch input and start the designated method or exit
                 switch (input)
@@ -117,9 +94,8 @@ namespace GestionaireMDP
                         break;
 
                 }
-
                 // File is constantly updated after each loop
-                Update();
+                pwManager.Update();
             }
             // Main menu loop - End
 
@@ -130,8 +106,9 @@ namespace GestionaireMDP
 
                 Console.WriteLine("Veuillez entrer un site: ");
                 site = Console.ReadLine();
-                if (CheckExisting() >= 0) {
+                if (pwManager.IndexFromSite(site:site) != INDEX_NOT_FOUND) {
                     Console.WriteLine("Ce site a déjà un enregistrement");
+                    Console.ReadLine();
                     return;
                 };
 
@@ -139,21 +116,21 @@ namespace GestionaireMDP
                 username = Console.ReadLine();
                 Console.WriteLine("Veuillez entrer un mot de passe: ");
                 password = Console.ReadLine();
-                entries.Add(new string[] { site, username, password } );
+                pwManager.AddPW(site: site, username: username, password: password);
             }
 
             void RemovePassword() {
-                Console.WriteLine("Veuillez entrer le site que vous voulez supprimer:");
-                int index = CheckExisting();
-                if (index >= 0)
+                int index = SiteSelection();
+                if (index == INDEX_NOT_FOUND)
+                {
+                    return;
+                }
+                else
                 {
                     Console.WriteLine(DisplayEntry(index));
                     entries.RemoveAt(index);
                 }
-                else
-                {
-                    Console.WriteLine("Aucune entrée pour ce site n'a été trouvée");
-                }
+
                 Console.WriteLine("Appuyer sur Enter pour revenir au menu");
                 do { input = Console.ReadKey().Key; } while (input != ConsoleKey.Enter);
 
@@ -161,21 +138,27 @@ namespace GestionaireMDP
 
             void ModifyPassword() {
                 Console.Clear();
-                Console.WriteLine("Veuillez entrer le site que vous voulez modifier:");
-                int index = CheckExisting();
-                if (index >= 0)
+                int index = SiteSelection();
+                if (index == INDEX_NOT_FOUND)
+                {
+                    return;
+                }
+                else
                 {
                     while (true) {
                         Console.Clear();
-                        Console.WriteLine(DisplayEntry(index));
                         Console.WriteLine(MODIFY_MENU);
+                        Console.WriteLine(DisplayEntry(index));
+                        Console.Write("Faites votre choix: ");
                         input = Console.ReadKey().Key;
+                        Console.WriteLine();
+
                         switch (input)
                         {
                             case ConsoleKey.D1:
                                 Console.WriteLine("Veuillez entrer le nouveau site: ");
-                                string site = Console.ReadLine();
-                                entries[index][SITE_INDEX] = site;
+                                string siteModification = Console.ReadLine();
+                                entries[index][SITE_INDEX] = siteModification;
                                 break;
                             case ConsoleKey.D2:
                                 Console.WriteLine("Veuillez entrer le nouveau username: ");
@@ -189,62 +172,37 @@ namespace GestionaireMDP
                                 break;
                             case ConsoleKey.D4:
                                 return;
-                                break;
                             default:
                                 break;
                         }
-                        Update();
+                        pwManager.Update();
                     }
                     
                 }
-                else
-                {
-                    Console.WriteLine("Aucune entrée pour ce site n'a été trouvée");
-
-                }
+                
                 Console.WriteLine("Appuyer sur Enter pour revenir au menu");
                 do { input = Console.ReadKey().Key; } while (input != ConsoleKey.Enter);
 
             }
 
-            void Update() {
-                content = "";
-                foreach (string[] entry in entries) {
 
-                    foreach (string item in entry) {
-                        content += item;
-                        content += SEPARATOR;
-                    }
-                    content += "\n";
-                    
-                }
-                File.WriteAllText(PATH, content);
-            }
 
-            int CheckExisting() {
-                string site = Console.ReadLine();
-                int index = 0;
-                foreach (string[] entry in entries) {
-                    if (entry[SITE_INDEX] == site) {
-                        return entries.IndexOf(entry);
-                    }
-                }
-                return -1;
-            }
+
 
             void GetPassword() {
 
-                int index = CheckExisting();
-                if (index >= 0)
+                int index = SiteSelection();
+                Console.WriteLine(index);
+                if (index == INDEX_NOT_FOUND)
                 {
+                    return;
+                }
+                else {
                     Console.WriteLine(DisplayEntry(index));
+                    Console.WriteLine("Appuyer sur Enter pour revenir au menu");
+                    do { input = Console.ReadKey().Key; } while (input != ConsoleKey.Enter);
                 }
-                else { 
-                    Console.WriteLine("Aucune entrée pour ce site n'a été trouvée");
-                
-                }
-                Console.WriteLine("Appuyer sur Enter pour revenir au menu");
-                do { input = Console.ReadKey().Key; } while (input != ConsoleKey.Enter);
+
 
             }
 
@@ -254,6 +212,40 @@ namespace GestionaireMDP
                     "Mot de passe: " + entries[index][PASSWORD_INDEX] + "\n";
             
             }
+
+            int SiteSelection() {
+                ConsoleKeyInfo k;
+                List <string> sites = new List <string>();
+
+                do {
+                    Console.Clear();
+                    Console.WriteLine(LINE);
+                    sites = pwManager.GetSiteList();
+                    for (int i = 0; i < sites.Count; i++)
+                    {
+                        Console.WriteLine((i+1)+ ". " + sites[i]);
+                    }
+                    Console.WriteLine(LINE + "\n");
+                    Console.Write("Faites votre choix (Enter pour revenir au menu principale): ");
+                     k = Console.ReadKey();
+                    Console.WriteLine();
+
+                    if (int.TryParse(k.KeyChar.ToString(), out int index))
+                    {
+
+                        index--;
+                        if (index >= 0 && index < sites.Count)
+                        {
+                            return index;
+                        }
+                    }                    
+                    
+                } while (k.Key != ConsoleKey.Enter);
+
+                return INDEX_NOT_FOUND;   
+            }
+
+
         }
     }
 }

@@ -2,7 +2,6 @@ D:\P_EnCours\Gestionnaire_MDP\Gestionnaire_mdp\GestionaireMDP\GestionaireMDP\bin
 D:\P_EnCours\Gestionnaire_MDP\Gestionnaire_mdp\GestionaireMDP\GestionaireMDP\bin\Debug\GestionaireMDP.exe
 D:\P_EnCours\Gestionnaire_MDP\Gestionnaire_mdp\GestionaireMDP\GestionaireMDP\bin\Debug\GestionaireMDP.pdb
 D:\P_EnCours\Gestionnaire_MDP\Gestionnaire_mdp\GestionaireMDP\GestionaireMDP\obj\Debug\GestionaireMDP.csproj.AssemblyReference.cache
-D:\P_EnCours\Gestionnaire_MDP\Gestionnaire_mdp\GestionaireMDP\GestionaireMDP\obj\Debug\GestionaireMDP.csproj.SuggestedBindingRedirects.cache
 D:\P_EnCours\Gestionnaire_MDP\Gestionnaire_mdp\GestionaireMDP\GestionaireMDP\obj\Debug\GestionaireMDP.csproj.CoreCompileInputs.cache
 D:\P_EnCours\Gestionnaire_MDP\Gestionnaire_mdp\GestionaireMDP\GestionaireMDP\obj\Debug\GestionaireMDP.exe
 D:\P_EnCours\Gestionnaire_MDP\Gestionnaire_mdp\GestionaireMDP\GestionaireMDP\obj\Debug\GestionaireMDP.pdb
