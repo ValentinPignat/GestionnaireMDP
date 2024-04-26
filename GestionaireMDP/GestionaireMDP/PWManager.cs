@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 using System.Globalization;
+using System.Security.Policy;
 
 namespace GestionaireMDP
 {
@@ -61,8 +62,12 @@ namespace GestionaireMDP
             _masterPW = PromptMasterPW();
 
             // If file doesn't exist, exit TODO
-            if (!FindFile()) {
+            if (!FindFile())
+            {
                 Environment.Exit(0);
+            }
+            else {
+                ImportPW();
             }
         }
 
@@ -240,6 +245,29 @@ namespace GestionaireMDP
 
         public void AddPW(string site, string username, string password){
             entries.Add(new string[] { site, Vigenere(toVig: username), Vigenere(toVig: password) }) ;
+        }
+
+        public void RemovePW (int index) {  
+            entries.RemoveAt(index) ; 
+        }
+
+        public string DisplayEntry(int index)
+        {
+            return "Site: " + entries[index][SITE_INDEX] + "\n" +
+                "Username : " + Vigenere(toVig: entries[index][USERNAME_INDEX], reversed: true) + "\n" +
+                "Mot de passe: " + Vigenere(toVig: entries[index][PASSWORD_INDEX], reversed: true) + "\n";
+
+        }
+
+        public void ChangePassword (int index, string newValue){
+            entries[index][PASSWORD_INDEX] = Vigenere(toVig: newValue);
+        }
+        public void ChangeUsername(int index, string newValue) {
+            entries[index][USERNAME_INDEX] = Vigenere(toVig: newValue);
+        }
+
+        public void ChangeSite(int index, string newValue) {
+            entries[index][SITE_INDEX] = newValue;
         }
     }
 }

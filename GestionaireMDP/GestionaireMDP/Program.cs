@@ -9,6 +9,7 @@ using System.IO;
 // Utiliser ASCII sans controle voir :https://stackoverflow.com/questions/887377/how-do-i-get-a-list-of-all-the-printable-characters-in-c
 // Dont take control character input 
 // Manage wrong file path -- alternative
+// REverse key sometime crash with some char
 
 namespace GestionaireMDP
 {
@@ -127,8 +128,8 @@ namespace GestionaireMDP
                 }
                 else
                 {
-                    Console.WriteLine(DisplayEntry(index));
-                    entries.RemoveAt(index);
+                    Console.WriteLine(pwManager.DisplayEntry(index));
+                    pwManager.RemovePW(index: index);
                 }
 
                 Console.WriteLine("Appuyer sur Enter pour revenir au menu");
@@ -148,7 +149,7 @@ namespace GestionaireMDP
                     while (true) {
                         Console.Clear();
                         Console.WriteLine(MODIFY_MENU);
-                        Console.WriteLine(DisplayEntry(index));
+                        Console.WriteLine(pwManager.DisplayEntry(index));
                         Console.Write("Faites votre choix: ");
                         input = Console.ReadKey().Key;
                         Console.WriteLine();
@@ -157,18 +158,18 @@ namespace GestionaireMDP
                         {
                             case ConsoleKey.D1:
                                 Console.WriteLine("Veuillez entrer le nouveau site: ");
-                                string siteModification = Console.ReadLine();
-                                entries[index][SITE_INDEX] = siteModification;
+                                string newSite = Console.ReadLine();
+                                pwManager.ChangeSite(index: index, newValue: newSite);
                                 break;
                             case ConsoleKey.D2:
                                 Console.WriteLine("Veuillez entrer le nouveau username: ");
-                                string username = Console.ReadLine();
-                                entries[index][USERNAME_INDEX] = username;
+                                string newUsername = Console.ReadLine();
+                                pwManager.ChangeUsername(index: index, newValue: newUsername);
                                 break;
                             case ConsoleKey.D3:
                                 Console.WriteLine("Veuillez entrer le nouveau mot de passe: ");
-                                string password = Console.ReadLine();
-                                entries[index][PASSWORD_INDEX] = password;
+                                string newPassword = Console.ReadLine();
+                                pwManager.ChangePassword(index: index, newValue: newPassword);
                                 break;
                             case ConsoleKey.D4:
                                 return;
@@ -180,8 +181,8 @@ namespace GestionaireMDP
                     
                 }
                 
-                Console.WriteLine("Appuyer sur Enter pour revenir au menu");
-                do { input = Console.ReadKey().Key; } while (input != ConsoleKey.Enter);
+                /*Console.WriteLine("Appuyer sur Enter pour revenir au menu");
+                do { input = Console.ReadKey().Key; } while (input != ConsoleKey.Enter);*/
 
             }
 
@@ -198,7 +199,7 @@ namespace GestionaireMDP
                     return;
                 }
                 else {
-                    Console.WriteLine(DisplayEntry(index));
+                    Console.WriteLine(pwManager.DisplayEntry(index));
                     Console.WriteLine("Appuyer sur Enter pour revenir au menu");
                     do { input = Console.ReadKey().Key; } while (input != ConsoleKey.Enter);
                 }
@@ -206,12 +207,6 @@ namespace GestionaireMDP
 
             }
 
-            string DisplayEntry(int index) { 
-                return "Site: " + entries[index][SITE_INDEX] + "\n" +
-                    "Username : " + entries[index][USERNAME_INDEX] + "\n" +
-                    "Mot de passe: " + entries[index][PASSWORD_INDEX] + "\n";
-            
-            }
 
             int SiteSelection() {
                 ConsoleKeyInfo k;
