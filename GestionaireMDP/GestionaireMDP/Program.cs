@@ -1,15 +1,23 @@
-﻿using System;
+﻿/// ETML
+/// Author : Valentin Pignat 
+/// Date (creation): 19.03.2024
+/// Description:
+
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-// TODO REPLACE -1 by const
-//  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA SEPARATOR MIGHT BE GENERATED FROM ENCRYPTION
-// Utiliser ASCII sans controle voir :https://stackoverflow.com/questions/887377/how-do-i-get-a-list-of-all-the-printable-characters-in-c
-// Dont take control character input 
+
+// TODO 
+// Add Base constructor to key one
+// MAIN IN A CLASS 
+// Dont take control character input  => multiple input check regex ???
 // Manage wrong file path -- alternative
-// REverse key sometime crash with some char
+// Add config if time 
+// See CDC (check missing)
+// Move main to menu ?
+// Improve input/ menu fluidity
+// Comment test better
 
 namespace GestionaireMDP
 {
@@ -100,24 +108,36 @@ namespace GestionaireMDP
             }
             // Main menu loop - End
 
+
+            /// <summary>
+            /// Get a master password from user
+            /// </summary>
+            /// <returns></returns>
+            string PromptMasterPW()
+            {
+                Console.WriteLine("Veuillez entrer votre mot de passe: ");
+                string masterPW = Console.ReadLine();
+                return masterPW;
+            }
+
             void AddPassword() {
-                string site;
-                string username;
-                string password;
+                string siteTemp;
+                string usernameTemp;
+                string passwordTemp;
 
                 Console.WriteLine("Veuillez entrer un site: ");
-                site = Console.ReadLine();
-                if (pwManager.IndexFromSite(site:site) != INDEX_NOT_FOUND) {
+                siteTemp = Console.ReadLine();
+                if (pwManager.IndexFromSite(site:siteTemp) != INDEX_NOT_FOUND) {
                     Console.WriteLine("Ce site a déjà un enregistrement");
                     Console.ReadLine();
                     return;
                 };
 
                 Console.WriteLine("Veuillez entrer un identifiant / username: ");
-                username = Console.ReadLine();
+                usernameTemp = Console.ReadLine();
                 Console.WriteLine("Veuillez entrer un mot de passe: ");
-                password = Console.ReadLine();
-                pwManager.AddPW(site: site, username: username, password: password);
+                passwordTemp = Console.ReadLine();
+                pwManager.AddPW(site: siteTemp, username: usernameTemp, password: passwordTemp);
             }
 
             void RemovePassword() {
@@ -193,7 +213,7 @@ namespace GestionaireMDP
             void GetPassword() {
 
                 int index = SiteSelection();
-                Console.WriteLine(index);
+
                 if (index == INDEX_NOT_FOUND)
                 {
                     return;

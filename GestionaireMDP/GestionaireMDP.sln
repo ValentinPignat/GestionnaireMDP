@@ -5,6 +5,8 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestionaireMDP", "GestionaireMDP\GestionaireMDP.csproj", "{0C037C97-F177-445A-8803-DAE78AE1BEDC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestVigenere", "TestVigenere\TestVigenere.csproj", "{8F889517-B22C-46BB-B1F3-6BAEA133542B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0C037C97-F177-445A-8803-DAE78AE1BEDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C037C97-F177-445A-8803-DAE78AE1BEDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C037C97-F177-445A-8803-DAE78AE1BEDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F889517-B22C-46BB-B1F3-6BAEA133542B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F889517-B22C-46BB-B1F3-6BAEA133542B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F889517-B22C-46BB-B1F3-6BAEA133542B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F889517-B22C-46BB-B1F3-6BAEA133542B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

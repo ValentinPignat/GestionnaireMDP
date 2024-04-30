@@ -3,8 +3,12 @@
   "WorkspaceRootPath": "D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0C037C97-F177-445A-8803-DAE78AE1BEDC}|GestionaireMDP\\GestionaireMDP.csproj|d:\\p_encours\\gestionnaire_mdp\\gestionnaire_mdp\\gestionairemdp\\gestionairemdp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{0C037C97-F177-445A-8803-DAE78AE1BEDC}|GestionaireMDP\\GestionaireMDP.csproj|D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\gestionairemdp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0C037C97-F177-445A-8803-DAE78AE1BEDC}|GestionaireMDP\\GestionaireMDP.csproj|solutionrelative:gestionairemdp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F889517-B22C-46BB-B1F3-6BAEA133542B}|TestVigenere\\TestVigenere.csproj|d:\\p_encours\\gestionnaire_mdp\\gestionnaire_mdp\\gestionairemdp\\testvigenere\\testvigenere.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F889517-B22C-46BB-B1F3-6BAEA133542B}|TestVigenere\\TestVigenere.csproj|solutionrelative:testvigenere\\testvigenere.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0C037C97-F177-445A-8803-DAE78AE1BEDC}|GestionaireMDP\\GestionaireMDP.csproj|D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\gestionairemdp\\menus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -22,11 +26,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "TestVigenere.cs",
+              "DocumentMoniker": "D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\TestVigenere\\TestVigenere.cs",
+              "RelativeDocumentMoniker": "TestVigenere\\TestVigenere.cs",
+              "ToolTip": "D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\TestVigenere\\TestVigenere.cs",
+              "RelativeToolTip": "TestVigenere\\TestVigenere.cs",
+              "ViewState": "AQIAABMAAAAAAAAAAAAQwFEAAAAsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-30T11:51:59.323Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "Menus.cs",
               "DocumentMoniker": "D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\GestionaireMDP\\Menus.cs",
               "RelativeDocumentMoniker": "GestionaireMDP\\Menus.cs",
@@ -39,13 +56,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "PWManager.cs",
               "DocumentMoniker": "D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\GestionaireMDP\\PWManager.cs",
               "RelativeDocumentMoniker": "GestionaireMDP\\PWManager.cs",
               "ToolTip": "D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\GestionaireMDP\\PWManager.cs",
               "RelativeToolTip": "GestionaireMDP\\PWManager.cs",
-              "ViewState": "AQIAAJ4AAAAAAAAAAAAcwL0AAAAvAAAA",
+              "ViewState": "AQIAAMoAAAAAAAAAAAAUwNsAAABAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-23T12:35:15.547Z",
               "EditorCaption": ""
@@ -58,7 +75,7 @@
               "RelativeDocumentMoniker": "GestionaireMDP\\Program.cs",
               "ToolTip": "D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\GestionaireMDP\\Program.cs",
               "RelativeToolTip": "GestionaireMDP\\Program.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAAAAAA",
+              "ViewState": "AQIAAAUAAAAAAAAAAAAAABMAAAAWAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-03-19T12:55:52.882Z",
               "EditorCaption": ""

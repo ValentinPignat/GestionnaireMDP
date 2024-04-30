@@ -1,16 +1,26 @@
-﻿using System;
+﻿/// ETML
+/// Author : Valentin Pignat 
+/// Date (creation): 23.04.2024
+/// Description:
+/// 
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.IO;
-using System.Threading.Tasks;
-using System.Globalization;
-using System.Security.Policy;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("TestVigenere")]
 
 namespace GestionaireMDP
 {
     internal class PWManager
     {
+
+        /// <summary>
+        /// Size of ASCII extended table
+        /// </summary>
+        const int ACII_EXT_SIZE = 256;
         /// <summary>
         /// Index of PW index
         /// </summary>
@@ -34,7 +44,7 @@ namespace GestionaireMDP
         /// <summary>
         /// Seperator used in the file
         /// </summary>
-        const char SEPARATOR = ' ';
+        const char SEPARATOR = '\t';
 
 
         /// <summary>
@@ -54,9 +64,29 @@ namespace GestionaireMDP
 
 
         /// <summary>
-        /// PWManager default constructor
+        /// PWManager constructor with given master password
         /// </summary>
-        public PWManager() {
+        /// <param name="masterPassword">Password used for en/decrypting</param>
+        public PWManager(string masterPassword) {
+            _printableChars = GetPrintableChars();
+
+            _masterPW = masterPassword;
+
+            // If file doesn't exist, exit TODO
+            if (!FindFile())
+            {
+                Environment.Exit(0);
+            }
+            else {
+                ImportPW();
+            }
+        }
+
+        /// <summary>
+        /// PWManager construtor that promps for master password in console
+        /// </summary>
+        public PWManager()
+        {
             _printableChars = GetPrintableChars();
 
             _masterPW = PromptMasterPW();
@@ -66,7 +96,8 @@ namespace GestionaireMDP
             {
                 Environment.Exit(0);
             }
-            else {
+            else
+            {
                 ImportPW();
             }
         }
@@ -85,25 +116,27 @@ namespace GestionaireMDP
         /// <summary>
         /// Return a list of printable ASCII characters
         /// Source: https://stackoverflow.com/questions/887377/how-do-i-get-a-list-of-all-the-printable-characters-in-c
+        /// Adapted with the help of Sebastien Tille : Avoid looping to char.MaxValue(0xFFFF), instead loop to ASCII_EXT_SIZE.
         /// </summary>
         /// <returns>List of printable characters</returns>
-        private List<char> GetPrintableChars() {
+        public List<char> GetPrintableChars() {
 
-            List<char> pChars = new List<Char>();
+                
+                        List<char> pChars = new List<Char>();
 
-            // For each char..
-            for (int i = char.MinValue; i <= char.MaxValue; i++)
-            {
-                char c = Convert.ToChar(i);
+                        // For each char..
+                        for (int i = 0; i < ACII_EXT_SIZE; i++)
+                        {
+                            char c = Convert.ToChar(i);
 
-                // ..if it isnt't a Control..
-                if (!char.IsControl(c))
-                {
-                    // ..add it to the list
-                    pChars.Add(c);
-                }
-            }
-            return pChars;
+                            // ..if it isnt't a Control..
+                            if (!char.IsControl(c))
+                            {
+                                // ..add it to the list
+                                pChars.Add(c);
+                            }
+                        }
+                        return pChars;
         }
 
         /// <summary>
@@ -117,7 +150,11 @@ namespace GestionaireMDP
                 // ... try to create it
                 try
                 {
-                    File.Create(PATH);
+                    // https://stackoverflow.com/questions/5156254/closing-a-file-after-file-create
+                    // https://stackoverflow.com/questions/66537978/c-sharp-system-io-ioexception-file-cannot-be-accessed-because-it-is-accessed-by
+                    // Create and CLOSE file to avoid used by other process error when reading content
+                    FileStream file = File.Create(PATH);
+                    file.Close();
                 }
                 // If the path is incorect, warning and exit eith false
                 catch
@@ -180,8 +217,7 @@ namespace GestionaireMDP
 
             for (int i = 0; i < toVig.Length; i++)
             {
-                crypted += _printableChars[(_printableChars.IndexOf(toVig[i]) + _printableChars.IndexOf(key[i % key.Length])) % _printableChars.Count];
-                Console.WriteLine(crypted);
+                crypted += _printableChars[(_printableChars.IndexOf(toVig[i]) + _printableChars.IndexOf(key[i % key.Length])) % (_printableChars.Count - 1)];
             }
             return crypted;
         }
@@ -198,7 +234,8 @@ namespace GestionaireMDP
             // Foreach char, replace by char(Max index - char index)
             foreach (char c in key)
             {
-                reversed += _printableChars[_printableChars.Count - _printableChars.IndexOf(c)];
+                // Count -1 for last Index
+                reversed += _printableChars[_printableChars.Count - 1 - _printableChars.IndexOf(c)];
             }
 
             return reversed;
