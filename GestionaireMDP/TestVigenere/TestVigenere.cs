@@ -45,6 +45,36 @@ namespace TestVigenere
 
         }
 
+        /// <summary>
+        /// Test that a key reversed two times return the starting value
+        /// </summary>
+        [TestMethod]
+        public void TestReverse() {
+
+            // Arrange
+
+            // Create a password manager with any password to obtain a list of printable characters
+            PWManager _pwManager = new PWManager(masterPassword: "asd");
+
+            // Act
+            List<char> printableChar = _pwManager.GetPrintableChars();
+
+
+            // Assert
+            foreach (char c in printableChar)
+            {
+                 
+                string reversed = _pwManager.ReverseKey(c.ToString());
+                reversed = _pwManager.ReverseKey(reversed);
+
+                Assert.AreEqual(c.ToString(), reversed);
+                
+            }
+        }
+
+        /// <summary>
+        /// Test encryption
+        /// </summary>
         [TestMethod]
         public void TestEncryption()
         {
@@ -60,31 +90,7 @@ namespace TestVigenere
             Assert.AreEqual(EXPECTED, crypted);
         }
 
-        [TestMethod]
-        public void TestReverse() {
-
-            // Arrange
-
-            // Create a password manager with any password to obtain a list of printable characters
-            PWManager _pwManager = new PWManager(masterPassword: "asd");
-            const string TO_VIGENERE = "aaa";
-
-            // Act
-            List<char> printableChar = _pwManager.GetPrintableChars();
-
-
-            foreach (char c in printableChar)
-            {
-                 
-                string reversed = _pwManager.ReverseKey(c.ToString());
-                reversed = _pwManager.ReverseKey(reversed);
-
-                Assert.AreEqual(c.ToString(), reversed);
-                
-
-
-
-            }
-        }
+        
+        
     }
 }

@@ -1,14 +1,18 @@
 ﻿/// ETML
 /// Author : Valentin Pignat 
 /// Date (creation): 23.04.2024
-/// Description:
-/// 
+/// Description: Password manager class.
+///     - Vigenere crypting.
+///     - Save crypted passwords in a text file
+///     - Crypt/Decrypt using password entered by user at start
+///     - Allows to manage passwords (Remove/Change entries)
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 [assembly: InternalsVisibleTo("TestVigenere")]
 
@@ -21,6 +25,7 @@ namespace GestionaireMDP
         /// Size of ASCII extended table
         /// </summary>
         const int ACII_EXT_SIZE = 256;
+
         /// <summary>
         /// Index of PW index
         /// </summary>
@@ -39,7 +44,7 @@ namespace GestionaireMDP
         /// <summary>
         /// Path of the text file
         /// </summary>
-        const string PATH = @"C:\Users\pe41oyl\Desktop\passwords.txt";
+        const string PW_PATH = @"..\..\passwords.txt";
 
         /// <summary>
         /// Seperator used in the file
@@ -109,7 +114,7 @@ namespace GestionaireMDP
         private string PromptMasterPW()
         {
             Console.WriteLine("Veuillez entrer votre mot de passe: ");
-            string masterPW = Console.ReadLine();
+            string masterPW = GetHiddenConsoleInput();
             return masterPW;
         }
 
@@ -145,7 +150,7 @@ namespace GestionaireMDP
         /// <returns>false if the file wasn't created</returns>
         private bool FindFile() {
             // If file doesn't exist ...
-            while (!File.Exists(PATH))
+            while (!File.Exists(PW_PATH))
             {
                 // ... try to create it
                 try
@@ -153,7 +158,7 @@ namespace GestionaireMDP
                     // https://stackoverflow.com/questions/5156254/closing-a-file-after-file-create
                     // https://stackoverflow.com/questions/66537978/c-sharp-system-io-ioexception-file-cannot-be-accessed-because-it-is-accessed-by
                     // Create and CLOSE file to avoid used by other process error when reading content
-                    FileStream file = File.Create(PATH);
+                    FileStream file = File.Create(PW_PATH);
                     file.Close();
                 }
                 // If the path is incorect, warning and exit eith false
@@ -178,7 +183,7 @@ namespace GestionaireMDP
             List<string> lines = new List<string>();
 
             // Get txt file content as a string and then split it into lines 
-            _content = File.ReadAllText(PATH);
+            _content = File.ReadAllText(PW_PATH);
             lines = _content.Split('\n').ToList();
 
             // For each of the lines split it in 3 strings (site, username, password) using the SEPARATOR
@@ -214,7 +219,7 @@ namespace GestionaireMDP
             string crypted = "";
 
 
-
+            // Foreach char add to their index an index based on the key (Vigenere)
             for (int i = 0; i < toVig.Length; i++)
             {
                 crypted += _printableChars[(_printableChars.IndexOf(toVig[i]) + _printableChars.IndexOf(key[i % key.Length])) % (_printableChars.Count - 1)];
@@ -242,23 +247,32 @@ namespace GestionaireMDP
 
         }
 
+        /// <summary>
+        /// Update content of the text file with entries
+        /// </summary>
         public void Update()
         {
             string updatedContent = "";
+
+            // Foreach entry, add site, username and password separated by SEPARATOR
             foreach (string[] entry in entries)
             {
-
                 foreach (string item in entry)
                 {
                     updatedContent += item;
                     updatedContent += SEPARATOR;
                 }
-                updatedContent += "\n";
 
+                // New line for each entry
+                updatedContent += "\n";
             }
-            File.WriteAllText(PATH, updatedContent);
+            File.WriteAllText(PW_PATH, updatedContent);
         }
 
+        /// <summary>
+        /// Returns list of sites with an entry
+        /// </summary>
+        /// <returns>List of sites with an entry</returns>
         public List<string> GetSiteList() {
             List<string> sites = new List<string>();
             for (int i = 0; i < entries.Count; i++)
@@ -268,6 +282,11 @@ namespace GestionaireMDP
             return sites;
         }
 
+        /// <summary>
+        /// Returns index of given site name
+        /// </summary>
+        /// <param name="site">Site name</param>
+        /// <returns>Index of site / INDEX_NOT_FOUND</returns>
         public int IndexFromSite(string site)
         {
             foreach (string[] entry in entries)
@@ -280,14 +299,29 @@ namespace GestionaireMDP
             return GestionaireMDP.Program.INDEX_NOT_FOUND;
         }
 
+        /// <summary>
+        /// Add a password to the entries and crypt username and password
+        /// </summary>
+        /// <param name="site">Site</param>
+        /// <param name="username">Username</param>
+        /// <param name="password">Password</param>
         public void AddPW(string site, string username, string password){
             entries.Add(new string[] { site, Vigenere(toVig: username), Vigenere(toVig: password) }) ;
         }
 
+        /// <summary>
+        /// Remove an entry
+        /// </summary>
+        /// <param name="index">Index site to remove</param>
         public void RemovePW (int index) {  
             entries.RemoveAt(index) ; 
         }
 
+        /// <summary>
+        /// Decrypt and return a string with a full entry
+        /// </summary>
+        /// <param name="index">Index site to display</param>
+        /// <returns>String to display</returns>
         public string DisplayEntry(int index)
         {
             return "Site: " + entries[index][SITE_INDEX] + "\n" +
@@ -296,15 +330,49 @@ namespace GestionaireMDP
 
         }
 
+        /// <summary>
+        /// Change a password in an entry
+        /// </summary>
+        /// <param name="index">Entry index</param>
+        /// <param name="newValue">New password</param>
         public void ChangePassword (int index, string newValue){
             entries[index][PASSWORD_INDEX] = Vigenere(toVig: newValue);
         }
+
+        /// <summary>
+        /// Change a username in an entry
+        /// </summary>
+        /// <param name="index">Entry index</param>
+        /// <param name="newValue">New username</param>
         public void ChangeUsername(int index, string newValue) {
             entries[index][USERNAME_INDEX] = Vigenere(toVig: newValue);
         }
 
+        /// <summary>
+        /// Change a site in an entry
+        /// </summary>
+        /// <param name="index">Entry index</param>
+        /// <param name="newValue">New site</param>
         public void ChangeSite(int index, string newValue) {
             entries[index][SITE_INDEX] = newValue;
+        }
+
+        /// <summary>
+        /// Get a string hidden from user
+        /// https://stackoverflow.com/questions/23433980/c-sharp-console-hide-the-input-from-console-window-while-typing
+        /// </summary>
+        /// <returns>User input string</returns>
+        private static string GetHiddenConsoleInput()
+        {
+            StringBuilder input = new StringBuilder();
+            while (true)
+            {
+                var key = Console.ReadKey(true);
+                if (key.Key == ConsoleKey.Enter) break;
+                if (key.Key == ConsoleKey.Backspace && input.Length > 0) input.Remove(input.Length - 1, 1);
+                else if (key.Key != ConsoleKey.Backspace) input.Append(key.KeyChar);
+            }
+            return input.ToString();
         }
     }
 }

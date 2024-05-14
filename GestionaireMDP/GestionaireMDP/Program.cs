@@ -7,17 +7,22 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 // TODO 
 // Add Base constructor to key one
-// MAIN IN A CLASS 
-// Dont take control character input  => multiple input check regex ???
+// MAIN IN A CLASS ???
+// Dont take control character input  => multiple input check regex 
 // Manage wrong file path -- alternative
 // Add config if time 
-// See CDC (check missing)
-// Move main to menu ?
+//
 // Improve input/ menu fluidity
-// Comment test better
+// Return when creating
+// Watch another entry
+
+// Visual
+//
+//
 
 namespace GestionaireMDP
 {
@@ -28,8 +33,6 @@ namespace GestionaireMDP
 
         static void Main(string[] args)
         {
-           // Unfound index
-
 
             // Line
             const string LINE = "*******************************************";
@@ -55,21 +58,11 @@ namespace GestionaireMDP
 
             
             // user input variable
-            ConsoleKey input;
+            ConsoleKey userInput;
 
             // Initialize password manager
             PWManager pwManager = new PWManager();
 
-            // TEST
-            /*
-            while (true) {
-                //string test = Console.ReadLine();
-                //Console.Write(ReverseKey(test));
-                string S = Console.ReadLine();
-                string reversed = pwManager.Vigenere(toVig: S);
-                string back = pwManager.Vigenere(toVig: S, reversed: true);
-
-            }*/
             
             // Main menu loop - Start
             while (true)
@@ -78,11 +71,11 @@ namespace GestionaireMDP
                 // Clear, displays menu and take input
                 Console.Clear();
                 Console.Write(MENU);
-                input = Console.ReadKey().Key;
+                userInput = Console.ReadKey().Key;
                 Console.WriteLine();
 
                 // Switch input and start the designated method or exit
-                switch (input)
+                switch (userInput)
                 {
                     case ConsoleKey.D1:
                         GetPassword();
@@ -98,7 +91,6 @@ namespace GestionaireMDP
                         break;
                     case ConsoleKey.D5:
                         return;
-                        break;
                     default:
                         break;
 
@@ -109,34 +101,41 @@ namespace GestionaireMDP
             // Main menu loop - End
 
 
-            /// <summary>
-            /// Get a master password from user
-            /// </summary>
-            /// <returns></returns>
-            string PromptMasterPW()
-            {
-                Console.WriteLine("Veuillez entrer votre mot de passe: ");
-                string masterPW = Console.ReadLine();
-                return masterPW;
-            }
-
             void AddPassword() {
                 string siteTemp;
                 string usernameTemp;
                 string passwordTemp;
 
-                Console.WriteLine("Veuillez entrer un site: ");
+                Console.WriteLine("\nVeuillez entrer un site (vide pour annuler): ");
                 siteTemp = Console.ReadLine();
+                if (siteTemp == "") {
+                    Console.WriteLine("Ajout annulé (Appuyer sur enter)");
+                    Console.ReadKey();
+                    return;
+                }
+
                 if (pwManager.IndexFromSite(site:siteTemp) != INDEX_NOT_FOUND) {
-                    Console.WriteLine("Ce site a déjà un enregistrement");
+                    Console.WriteLine("Ce site a déjà un enregistrement (Appuyer sur enter)");
                     Console.ReadLine();
                     return;
                 };
 
-                Console.WriteLine("Veuillez entrer un identifiant / username: ");
+                Console.WriteLine("\nVeuillez entrer un identifiant / username (vide pour annuler): ");
                 usernameTemp = Console.ReadLine();
-                Console.WriteLine("Veuillez entrer un mot de passe: ");
+                if (usernameTemp == "")
+                {
+                    Console.WriteLine("Ajout annulé (Appuyer sur enter)");
+                    Console.ReadKey();
+                    return;
+                }
+                Console.WriteLine("\nVeuillez entrer un mot de passe (vide pour annuler): ");
                 passwordTemp = Console.ReadLine();
+                if (passwordTemp == "")
+                {
+                    Console.WriteLine("Ajout annulé (Appuyer sur enter)");
+                    Console.ReadKey();
+                    return;
+                }
                 pwManager.AddPW(site: siteTemp, username: usernameTemp, password: passwordTemp);
             }
 
@@ -148,16 +147,17 @@ namespace GestionaireMDP
                 }
                 else
                 {
-                    Console.WriteLine(pwManager.DisplayEntry(index));
+                    Console.WriteLine("\n" + pwManager.DisplayEntry(index));
                     pwManager.RemovePW(index: index);
                 }
 
-                Console.WriteLine("Appuyer sur Enter pour revenir au menu");
-                do { input = Console.ReadKey().Key; } while (input != ConsoleKey.Enter);
+                Console.WriteLine("=> Site retiré\n\nAppuyer sur Enter pour revenir au menu");
+                do { userInput = Console.ReadKey().Key; } while (userInput != ConsoleKey.Enter);
 
             }
 
             void ModifyPassword() {
+               
                 Console.Clear();
                 int index = SiteSelection();
                 if (index == INDEX_NOT_FOUND)
@@ -171,10 +171,10 @@ namespace GestionaireMDP
                         Console.WriteLine(MODIFY_MENU);
                         Console.WriteLine(pwManager.DisplayEntry(index));
                         Console.Write("Faites votre choix: ");
-                        input = Console.ReadKey().Key;
+                        userInput = Console.ReadKey().Key;
                         Console.WriteLine();
 
-                        switch (input)
+                        switch (userInput)
                         {
                             case ConsoleKey.D1:
                                 Console.WriteLine("Veuillez entrer le nouveau site: ");
@@ -197,33 +197,28 @@ namespace GestionaireMDP
                                 break;
                         }
                         pwManager.Update();
-                    }
-                    
+                    }                  
                 }
-                
-                /*Console.WriteLine("Appuyer sur Enter pour revenir au menu");
-                do { input = Console.ReadKey().Key; } while (input != ConsoleKey.Enter);*/
-
             }
-
-
-
 
 
             void GetPassword() {
 
-                int index = SiteSelection();
-
-                if (index == INDEX_NOT_FOUND)
+                do
                 {
-                    return;
-                }
-                else {
-                    Console.WriteLine(pwManager.DisplayEntry(index));
-                    Console.WriteLine("Appuyer sur Enter pour revenir au menu");
-                    do { input = Console.ReadKey().Key; } while (input != ConsoleKey.Enter);
-                }
+                    int index = SiteSelection();
 
+                    if (index == INDEX_NOT_FOUND)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("\n" + pwManager.DisplayEntry(index));
+                        Console.WriteLine("Appuyer sur Enter pour revenir à la selection");
+                        userInput = Console.ReadKey().Key; 
+                    }
+                } while (true);
 
             }
 
@@ -259,6 +254,8 @@ namespace GestionaireMDP
 
                 return INDEX_NOT_FOUND;   
             }
+
+  
 
 
         }
