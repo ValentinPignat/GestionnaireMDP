@@ -2,6 +2,7 @@
 /// Author : Valentin Pignat 
 /// Date (creation): 23.04.2024
 /// Description: Password manager class.
+///     - Authentificate user on creation
 ///     - Vigenere crypting.
 ///     - Save crypted passwords in a text file
 ///     - Crypt/Decrypt using password entered by user at start
@@ -13,6 +14,8 @@ using System.Linq;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Diagnostics.Contracts;
+using System.Text.RegularExpressions;
 
 [assembly: InternalsVisibleTo("TestVigenere")]
 
@@ -20,6 +23,18 @@ namespace GestionaireMDP
 {
     internal class PWManager
     {
+
+        /// <summary>
+        /// Regex uses for master password. 
+        /// Minimum eight characters, at least one letter and one number:
+        /// Source : https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
+        /// </summary>
+        const string MPW_REGEX = @"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$";
+
+        /// <summary>
+        /// Maximum login attemps
+        /// </summary>
+        const int MAX_ATTEMPS = 3;
 
         /// <summary>
         /// Size of ASCII extended table
@@ -51,7 +66,6 @@ namespace GestionaireMDP
         /// </summary>
         const char SEPARATOR = '\t';
 
-
         /// <summary>
         /// List of printable characters 
         /// </summary>
@@ -67,6 +81,15 @@ namespace GestionaireMDP
         /// </summary>
         readonly string _masterPW;
 
+        /// <summary>
+        /// Path of the config filr
+        /// </summary>
+        const string CONFIG_PATH = @"..\..\config.txt";
+
+        /// <summary>
+        /// Master Password
+        /// </summary>
+        private string _cryptedMPW;
 
         /// <summary>
         /// PWManager constructor with given master password
@@ -77,13 +100,16 @@ namespace GestionaireMDP
 
             _masterPW = masterPassword;
 
-            // If file doesn't exist, exit TODO
-            if (!FindFile())
+            // If file doesn't exist, exit
+            if (!FindFile(PW_PATH))
             {
+                Console.Clear();
+                Console.WriteLine("The file path is incorect");
+                Console.ReadLine();
                 Environment.Exit(0);
             }
             else {
-                ImportPW();
+                ImportEntries();
             }
         }
 
@@ -94,30 +120,120 @@ namespace GestionaireMDP
         {
             _printableChars = GetPrintableChars();
 
-            _masterPW = PromptMasterPW();
-
-            // If file doesn't exist, exit TODO
-            if (!FindFile())
+            // If file doesn't exist, exit 
+            if (!FindFile(CONFIG_PATH))
             {
+                Console.Clear();
+                Console.WriteLine("The file path is incorect :" + CONFIG_PATH);
+                Console.ReadLine();
                 Environment.Exit(0);
             }
             else
             {
-                ImportPW();
+                _cryptedMPW = ImportMPW();
+
+                // if no password was found
+                if (_cryptedMPW == "") {
+                    _masterPW = PromptMasterPW();
+                }
+
+                // if a password was found get to login
+                else
+                {
+             
+                    bool logged = false;
+                    int attemps = 0;
+
+                    do {
+                        Console.Clear();
+
+                        // If user failt to log on afte MAX_ATTEMPS attemps, display message and exit
+                        if (attemps == MAX_ATTEMPS)
+                        {
+                            Console.WriteLine("Failed to login after " + attemps + " attemps" + "\nShutting down...");
+                            Console.ReadLine ();
+                            Environment.Exit(0);    
+                        }
+
+                        // Get a password from user and Vigenere crypted password with revered password as key
+                        string loginPW = PromptLogin();
+
+                        // If the result equals the password given by user login
+                        if (Vigenere(toVig: _cryptedMPW, reversed: true, key: loginPW) == loginPW)
+                        { 
+                            logged = true;
+                            _masterPW = loginPW;
+                        }
+
+                        attemps++;
+
+                    } while (!logged);
+
+                }
+            }
+
+            // If file doesn't exist, exit 
+            if (!FindFile(PW_PATH))
+            {
+                Console.Clear();
+                Console.WriteLine("The file path is incorect :" + PW_PATH);
+                Console.ReadLine();
+                Environment.Exit(0);
+            }
+            else
+            {
+                ImportEntries();
             }
         }
 
         /// <summary>
         /// Get a master password from user
         /// </summary>
-        /// <returns></returns>
+        /// <returns>New master password</returns>
         private string PromptMasterPW()
         {
-            Console.WriteLine("Veuillez entrer votre mot de passe: ");
-            string masterPW = GetHiddenConsoleInput();
-            return masterPW;
+            string masterPW;
+
+            // Loop until password is returned
+            do {
+
+                // Loop as long as REGEX doesn't match
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine("Veuillez entrer votre nouveau mot de passe maître: ");
+                    masterPW = GetHiddenConsoleInput();
+
+                    // Display disclaimer if regex doesn't match
+                    if (!Regex.IsMatch(masterPW, MPW_REGEX)){
+                        Console.WriteLine("Votre mot de passe doit contenir au moins 8 charactères, au moin une lettre et un chiffre (Appuyez sur Enter)");
+                        Console.ReadLine();
+                    }
+                } while (!Regex.IsMatch(masterPW, MPW_REGEX));
+
+                // Confirm password
+                Console.Clear();
+                Console.WriteLine("Veuillez entrez à nouveau votre nouveau mot de passe maître: ");
+                if (GetHiddenConsoleInput() == masterPW)
+                {
+                    // Update MPW in file and return new password
+                    UpdateMPW(masterPW);
+                    return masterPW;
+                }
+            } while (true);
+            
+            
         }
 
+        /// <summary>
+        /// Update master password in config file
+        /// </summary>
+        /// <param name="newMPW"></param>
+        private void UpdateMPW(string newMPW)
+        {
+            File.WriteAllText(CONFIG_PATH, Vigenere(toVig: newMPW, key: newMPW));
+        }
+        
         /// <summary>
         /// Return a list of printable ASCII characters
         /// Source: https://stackoverflow.com/questions/887377/how-do-i-get-a-list-of-all-the-printable-characters-in-c
@@ -148,9 +264,9 @@ namespace GestionaireMDP
         /// Check if the file path exists, else try to create it
         /// </summary>
         /// <returns>false if the file wasn't created</returns>
-        private bool FindFile() {
+        private bool FindFile(string path) {
             // If file doesn't exist ...
-            while (!File.Exists(PW_PATH))
+            while (!File.Exists(path))
             {
                 // ... try to create it
                 try
@@ -158,7 +274,7 @@ namespace GestionaireMDP
                     // https://stackoverflow.com/questions/5156254/closing-a-file-after-file-create
                     // https://stackoverflow.com/questions/66537978/c-sharp-system-io-ioexception-file-cannot-be-accessed-because-it-is-accessed-by
                     // Create and CLOSE file to avoid used by other process error when reading content
-                    FileStream file = File.Create(PW_PATH);
+                    FileStream file = File.Create(path);
                     file.Close();
                 }
                 // If the path is incorect, warning and exit eith false
@@ -177,7 +293,7 @@ namespace GestionaireMDP
         /// <summary>
         /// Get the content of the password file and put its content in Lists
         /// </summary>
-        private void ImportPW()
+        private void ImportEntries()
         {
             string _content = "";
             List<string> lines = new List<string>();
@@ -207,9 +323,12 @@ namespace GestionaireMDP
         /// <param name="reversed">true to decrypt</param>
         /// <param name="key">key to encrypt </param>
         /// <returns></returns>
-        public string Vigenere(string toVig, bool reversed = false)
+        public string Vigenere(string toVig, bool reversed = false, string key = "")
         {
-            string key = _masterPW;
+            // if no key was given use master password
+            if (key == "") {
+                key = _masterPW;
+            }
 
             // If we want to decrypt, reverse key
             if (reversed) {
@@ -373,6 +492,30 @@ namespace GestionaireMDP
                 else if (key.Key != ConsoleKey.Backspace) input.Append(key.KeyChar);
             }
             return input.ToString();
+        }
+
+        /// <summary>
+        /// Get the content of the config file
+        /// </summary>
+        /// <returns>Crypted master password</returns>
+        private string ImportMPW()
+        {
+
+            // Get txt file content 
+            string _content = "";
+            _content = File.ReadAllText(CONFIG_PATH);
+            return _content;
+        }
+
+        /// <summary>
+        /// Get a login password from user
+        /// </summary>
+        /// <returns></returns>
+        private string PromptLogin()
+        {
+            Console.WriteLine("Veuillez entrer votre mot de passe: ");
+            string masterPW = GetHiddenConsoleInput();
+            return masterPW;
         }
     }
 }

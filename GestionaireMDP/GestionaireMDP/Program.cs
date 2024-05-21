@@ -10,18 +10,9 @@ using System.IO;
 using System.Text;
 
 // TODO 
-// Add Base constructor to key one
-// MAIN IN A CLASS ???
-// Dont take control character input  => multiple input check regex 
+// Add Base constructor to key one -- IMPORTANT
 // Manage wrong file path -- alternative
-// Add config if time 
-//
-// Improve input/ menu fluidity
-// Return when creating
-// Watch another entry
-
-// Visual
-//
+// 
 //
 
 namespace GestionaireMDP
@@ -100,12 +91,13 @@ namespace GestionaireMDP
             }
             // Main menu loop - End
 
-
+            // Add password menu - can be exited at any point by entering an emplty string
             void AddPassword() {
                 string siteTemp;
                 string usernameTemp;
                 string passwordTemp;
 
+                // Get site
                 Console.WriteLine("\nVeuillez entrer un site (vide pour annuler): ");
                 siteTemp = Console.ReadLine();
                 if (siteTemp == "") {
@@ -113,13 +105,15 @@ namespace GestionaireMDP
                     Console.ReadKey();
                     return;
                 }
-
+                
+                // Check if site already has an entry
                 if (pwManager.IndexFromSite(site:siteTemp) != INDEX_NOT_FOUND) {
                     Console.WriteLine("Ce site a déjà un enregistrement (Appuyer sur enter)");
                     Console.ReadLine();
                     return;
                 };
 
+                // Get username
                 Console.WriteLine("\nVeuillez entrer un identifiant / username (vide pour annuler): ");
                 usernameTemp = Console.ReadLine();
                 if (usernameTemp == "")
@@ -128,6 +122,8 @@ namespace GestionaireMDP
                     Console.ReadKey();
                     return;
                 }
+
+                // Get password
                 Console.WriteLine("\nVeuillez entrer un mot de passe (vide pour annuler): ");
                 passwordTemp = Console.ReadLine();
                 if (passwordTemp == "")
@@ -139,8 +135,13 @@ namespace GestionaireMDP
                 pwManager.AddPW(site: siteTemp, username: usernameTemp, password: passwordTemp);
             }
 
+            // Remove password
             void RemovePassword() {
+
+                // Choose site 
                 int index = SiteSelection();
+
+                // If no index was returned, go back to main menu
                 if (index == INDEX_NOT_FOUND)
                 {
                     return;
@@ -158,14 +159,17 @@ namespace GestionaireMDP
 
             void ModifyPassword() {
                
-                Console.Clear();
+                // Choose site
                 int index = SiteSelection();
+
+                // If no index was returned, go back to main menu
                 if (index == INDEX_NOT_FOUND)
                 {
                     return;
                 }
                 else
                 {
+                    // Enter submenu - which part to modify
                     while (true) {
                         Console.Clear();
                         Console.WriteLine(MODIFY_MENU);
@@ -176,16 +180,22 @@ namespace GestionaireMDP
 
                         switch (userInput)
                         {
+
+                            // Change site
                             case ConsoleKey.D1:
                                 Console.WriteLine("Veuillez entrer le nouveau site: ");
                                 string newSite = Console.ReadLine();
                                 pwManager.ChangeSite(index: index, newValue: newSite);
                                 break;
+
+                            // Change username
                             case ConsoleKey.D2:
                                 Console.WriteLine("Veuillez entrer le nouveau username: ");
                                 string newUsername = Console.ReadLine();
                                 pwManager.ChangeUsername(index: index, newValue: newUsername);
                                 break;
+
+                            // Change password
                             case ConsoleKey.D3:
                                 Console.WriteLine("Veuillez entrer le nouveau mot de passe: ");
                                 string newPassword = Console.ReadLine();
@@ -201,11 +211,13 @@ namespace GestionaireMDP
                 }
             }
 
-
+            // Display an entry
             void GetPassword() {
 
+                // Loop to consult multiple pw without going back to main menu
                 do
                 {
+                    // Choose site
                     int index = SiteSelection();
 
                     if (index == INDEX_NOT_FOUND)
@@ -214,19 +226,21 @@ namespace GestionaireMDP
                     }
                     else
                     {
+
+                        // Display entry
                         Console.WriteLine("\n" + pwManager.DisplayEntry(index));
                         Console.WriteLine("Appuyer sur Enter pour revenir à la selection");
-                        userInput = Console.ReadKey().Key; 
+                        Console.ReadKey(); 
                     }
                 } while (true);
-
             }
 
-
+            // Display existing entries site and get an index from user 
             int SiteSelection() {
                 ConsoleKeyInfo k;
                 List <string> sites = new List <string>();
 
+                // Loop if nothing was selected
                 do {
                     Console.Clear();
                     Console.WriteLine(LINE);
@@ -240,9 +254,9 @@ namespace GestionaireMDP
                      k = Console.ReadKey();
                     Console.WriteLine();
 
+                    // Return chosen site's index if valid
                     if (int.TryParse(k.KeyChar.ToString(), out int index))
                     {
-
                         index--;
                         if (index >= 0 && index < sites.Count)
                         {
@@ -250,8 +264,10 @@ namespace GestionaireMDP
                         }
                     }                    
                     
+                    // Exit back to main with enter
                 } while (k.Key != ConsoleKey.Enter);
 
+                // Return no chosen index
                 return INDEX_NOT_FOUND;   
             }
 

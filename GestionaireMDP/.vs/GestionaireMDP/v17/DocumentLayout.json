@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0C037C97-F177-445A-8803-DAE78AE1BEDC}|GestionaireMDP\\GestionaireMDP.csproj|D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\gestionairemdp\\pwmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{0C037C97-F177-445A-8803-DAE78AE1BEDC}|GestionaireMDP\\GestionaireMDP.csproj|D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\gestionairemdp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0C037C97-F177-445A-8803-DAE78AE1BEDC}|GestionaireMDP\\GestionaireMDP.csproj|solutionrelative:gestionairemdp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0C037C97-F177-445A-8803-DAE78AE1BEDC}|GestionaireMDP\\GestionaireMDP.csproj|d:\\p_encours\\gestionnaire_mdp\\gestionnaire_mdp\\gestionairemdp\\gestionairemdp\\pwmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0C037C97-F177-445A-8803-DAE78AE1BEDC}|GestionaireMDP\\GestionaireMDP.csproj|solutionrelative:gestionairemdp\\pwmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8F889517-B22C-46BB-B1F3-6BAEA133542B}|TestVigenere\\TestVigenere.csproj|D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\testvigenere\\testvigenere.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F889517-B22C-46BB-B1F3-6BAEA133542B}|TestVigenere\\TestVigenere.csproj|solutionrelative:testvigenere\\testvigenere.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0C037C97-F177-445A-8803-DAE78AE1BEDC}|GestionaireMDP\\GestionaireMDP.csproj|d:\\p_encours\\gestionnaire_mdp\\gestionnaire_mdp\\gestionairemdp\\gestionairemdp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0C037C97-F177-445A-8803-DAE78AE1BEDC}|GestionaireMDP\\GestionaireMDP.csproj|solutionrelative:gestionairemdp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0C037C97-F177-445A-8803-DAE78AE1BEDC}|GestionaireMDP\\GestionaireMDP.csproj|D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\gestionairemdp\\menus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -26,11 +26,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 927,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "TestVigenere.cs",
               "DocumentMoniker": "D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\TestVigenere\\TestVigenere.cs",
               "RelativeDocumentMoniker": "TestVigenere\\TestVigenere.cs",
@@ -51,43 +51,55 @@
               "RelativeToolTip": "GestionaireMDP\\Menus.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-23T11:26:59.914Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "PWManager.cs",
-              "DocumentMoniker": "D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\GestionaireMDP\\PWManager.cs",
-              "RelativeDocumentMoniker": "GestionaireMDP\\PWManager.cs",
-              "ToolTip": "D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\GestionaireMDP\\PWManager.cs",
-              "RelativeToolTip": "GestionaireMDP\\PWManager.cs",
-              "ViewState": "AQIAAPAAAAAAAAAAAAAawK0AAAAWAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-23T12:35:15.547Z",
+              "WhenOpened": "2024-04-23T11:26:59.914Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\GestionaireMDP\\Program.cs",
               "RelativeDocumentMoniker": "GestionaireMDP\\Program.cs",
               "ToolTip": "D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\GestionaireMDP\\Program.cs",
               "RelativeToolTip": "GestionaireMDP\\Program.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAqwBMAAAAWAAAA",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAAABMAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-03-19T12:55:52.882Z",
               "EditorCaption": ""
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "FloatingWindowState": {
+        "Id": "425b995f-f2f5-4a61-b703-1687ef9038a7",
+        "Display": 1,
+        "X": 179,
+        "Y": -20,
+        "Width": 1349,
+        "Height": 583,
+        "WindowState": 2
+      },
+      "DocumentGroups": [
         {
-          "DockedWidth": 240,
-          "SelectedChildIndex": -1,
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PWManager.cs",
+              "DocumentMoniker": "D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\GestionaireMDP\\PWManager.cs",
+              "RelativeDocumentMoniker": "GestionaireMDP\\PWManager.cs",
+              "ToolTip": "D:\\P_EnCours\\Gestionnaire_MDP\\Gestionnaire_mdp\\GestionaireMDP\\GestionaireMDP\\PWManager.cs",
+              "RelativeToolTip": "GestionaireMDP\\PWManager.cs",
+              "ViewState": "AQIAALUAAAAAAAAAAAAAANIAAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-23T12:35:15.547Z",
+              "EditorCaption": ""
             }
           ]
         }
