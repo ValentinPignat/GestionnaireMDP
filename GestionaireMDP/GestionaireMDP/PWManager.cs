@@ -14,7 +14,6 @@ using System.Linq;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Diagnostics.Contracts;
 using System.Text.RegularExpressions;
 
 [assembly: InternalsVisibleTo("TestVigenere")]
@@ -79,7 +78,7 @@ namespace GestionaireMDP
         /// <summary>
         /// master password used to encrypt/decrypt 
         /// </summary>
-        readonly string _masterPW;
+        private string _masterPW;
 
         /// <summary>
         /// Path of the config filr
@@ -92,10 +91,16 @@ namespace GestionaireMDP
         private string _cryptedMPW;
 
         /// <summary>
+        /// User readkey input
+        /// </summary>
+        private ConsoleKey _userInput;
+
+        /// <summary>
         /// PWManager constructor with given master password
         /// </summary>
         /// <param name="masterPassword">Password used for en/decrypting</param>
         public PWManager(string masterPassword) {
+
             _printableChars = GetPrintableChars();
 
             _masterPW = masterPassword;
@@ -207,18 +212,21 @@ namespace GestionaireMDP
                     // Display disclaimer if regex doesn't match
                     if (!Regex.IsMatch(masterPW, MPW_REGEX)){
                         Console.WriteLine("Votre mot de passe doit contenir au moins 8 charactères, au moin une lettre et un chiffre (Appuyez sur Enter)");
-                        Console.ReadLine();
+                        do { _userInput = Console.ReadKey(intercept: true).Key; } while (_userInput != ConsoleKey.Enter);
                     }
                 } while (!Regex.IsMatch(masterPW, MPW_REGEX));
 
                 // Confirm password
-                Console.Clear();
-                Console.WriteLine("Veuillez entrez à nouveau votre nouveau mot de passe maître: ");
+                Console.WriteLine("\n[Confirmer] Veuillez entrez à nouveau votre nouveau mot de passe maître: ");
                 if (GetHiddenConsoleInput() == masterPW)
                 {
                     // Update MPW in file and return new password
                     UpdateMPW(masterPW);
                     return masterPW;
+                }
+                else {
+                    Console.WriteLine("\nLes mots de passes ne sont pas identiques, veuillez réessayer (Appuyez sur Enter)");
+                    do { _userInput = Console.ReadKey(intercept: true).Key; } while (_userInput != ConsoleKey.Enter);
                 }
             } while (true);
             
@@ -367,9 +375,9 @@ namespace GestionaireMDP
         }
 
         /// <summary>
-        /// Update content of the text file with entries
+        /// Export content of the text file with entries
         /// </summary>
-        public void Update()
+        public void ExportPW()
         {
             string updatedContent = "";
 
@@ -516,6 +524,34 @@ namespace GestionaireMDP
             Console.WriteLine("Veuillez entrer votre mot de passe: ");
             string masterPW = GetHiddenConsoleInput();
             return masterPW;
+        }
+
+        /// <summary>
+        /// Change master password, update password with new key
+        /// </summary>
+        public void ChangeMPW() {
+
+            // Store old MPW
+            string oldPW = _masterPW;
+
+            // Get new MPW, update in config
+            _masterPW = PromptMasterPW();
+            UpdateMPW(newMPW: _masterPW);
+
+            foreach (var entry in entries)
+            {
+                // Decrypt with old key
+                entry[USERNAME_INDEX] = Vigenere(toVig: entry[USERNAME_INDEX], reversed: true, key: oldPW);
+                entry[PASSWORD_INDEX] = Vigenere(toVig: entry[PASSWORD_INDEX], reversed: true, key: oldPW );
+
+                // Encrypt with new key
+                entry[USERNAME_INDEX] = Vigenere(toVig: entry[USERNAME_INDEX]);
+                entry[PASSWORD_INDEX] = Vigenere(toVig: entry[PASSWORD_INDEX]);
+            }
+
+            // Update entries in file
+            ExportPW();
+        
         }
     }
 }

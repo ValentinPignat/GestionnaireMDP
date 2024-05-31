@@ -1,19 +1,12 @@
 ﻿/// ETML
 /// Author : Valentin Pignat 
 /// Date (creation): 19.03.2024
-/// Description:
-
+/// Description: Main programm for password manage
+///     - Navigate between menus
+///     - Comunicate with PWManager to mange passwords
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
-
-// TODO 
-// Add Base constructor to key one -- IMPORTANT
-// Manage wrong file path -- alternative
-// 
-//
 
 namespace GestionaireMDP
 {
@@ -27,6 +20,7 @@ namespace GestionaireMDP
 
             // Line
             const string LINE = "*******************************************";
+
             // Main menu
             const string MENU = "*******************************************\n"+
                                 "Sélectionnez une action\n" +
@@ -34,7 +28,8 @@ namespace GestionaireMDP
                                 "2: Ajouter un mot de passe\n" +
                                 "3: Supprimer un mot de passe\n" +
                                 "4: Modifier un mot de passe\n" +
-                                "5: Quitter le programme\n" +
+                                "5: Modifier le mot de passe maître\n" +
+                                "6: Quitter le programme\n" +
                                 "*******************************************\n\n" +
                                 "Faites votre choix : ";
 
@@ -53,7 +48,6 @@ namespace GestionaireMDP
 
             // Initialize password manager
             PWManager pwManager = new PWManager();
-
             
             // Main menu loop - Start
             while (true)
@@ -81,13 +75,16 @@ namespace GestionaireMDP
                         ModifyPassword();
                         break;
                     case ConsoleKey.D5:
-                        return;
+                        pwManager.ChangeMPW();
+                        break;
+                    case ConsoleKey.D6:
+                        Environment.Exit(0);
+                        break;
                     default:
                         break;
-
                 }
                 // File is constantly updated after each loop
-                pwManager.Update();
+                pwManager.ExportPW();
             }
             // Main menu loop - End
 
@@ -101,15 +98,15 @@ namespace GestionaireMDP
                 Console.WriteLine("\nVeuillez entrer un site (vide pour annuler): ");
                 siteTemp = Console.ReadLine();
                 if (siteTemp == "") {
-                    Console.WriteLine("Ajout annulé (Appuyer sur enter)");
-                    Console.ReadKey();
+                    Console.WriteLine("Ajout annulé (Appuyer sur Enter)");
+                    do { userInput = Console.ReadKey(intercept: true).Key; } while (userInput != ConsoleKey.Enter);
                     return;
                 }
                 
                 // Check if site already has an entry
                 if (pwManager.IndexFromSite(site:siteTemp) != INDEX_NOT_FOUND) {
-                    Console.WriteLine("Ce site a déjà un enregistrement (Appuyer sur enter)");
-                    Console.ReadLine();
+                    Console.WriteLine("Ce site a déjà un enregistrement (Appuyer sur Enter)");
+                    do { userInput = Console.ReadKey(intercept: true).Key; } while (userInput != ConsoleKey.Enter);
                     return;
                 };
 
@@ -118,8 +115,8 @@ namespace GestionaireMDP
                 usernameTemp = Console.ReadLine();
                 if (usernameTemp == "")
                 {
-                    Console.WriteLine("Ajout annulé (Appuyer sur enter)");
-                    Console.ReadKey();
+                    Console.WriteLine("Ajout annulé (Appuyer sur Enter)");
+                    do { userInput = Console.ReadKey(intercept: true).Key; } while (userInput != ConsoleKey.Enter);
                     return;
                 }
 
@@ -128,8 +125,8 @@ namespace GestionaireMDP
                 passwordTemp = Console.ReadLine();
                 if (passwordTemp == "")
                 {
-                    Console.WriteLine("Ajout annulé (Appuyer sur enter)");
-                    Console.ReadKey();
+                    Console.WriteLine("Ajout annulé (Appuyer sur Enter)");
+                    do { userInput = Console.ReadKey(intercept: true).Key; } while (userInput != ConsoleKey.Enter);
                     return;
                 }
                 pwManager.AddPW(site: siteTemp, username: usernameTemp, password: passwordTemp);
@@ -153,7 +150,7 @@ namespace GestionaireMDP
                 }
 
                 Console.WriteLine("=> Site retiré\n\nAppuyer sur Enter pour revenir au menu");
-                do { userInput = Console.ReadKey().Key; } while (userInput != ConsoleKey.Enter);
+                do { userInput = Console.ReadKey(intercept: true).Key; } while (userInput != ConsoleKey.Enter);
 
             }
 
@@ -206,7 +203,7 @@ namespace GestionaireMDP
                             default:
                                 break;
                         }
-                        pwManager.Update();
+                        pwManager.ExportPW();
                     }                  
                 }
             }
@@ -230,7 +227,7 @@ namespace GestionaireMDP
                         // Display entry
                         Console.WriteLine("\n" + pwManager.DisplayEntry(index));
                         Console.WriteLine("Appuyer sur Enter pour revenir à la selection");
-                        Console.ReadKey(); 
+                        do { userInput = Console.ReadKey(intercept: true).Key; } while (userInput != ConsoleKey.Enter);
                     }
                 } while (true);
             }
@@ -251,7 +248,7 @@ namespace GestionaireMDP
                     }
                     Console.WriteLine(LINE + "\n");
                     Console.Write("Faites votre choix (Enter pour revenir au menu principale): ");
-                     k = Console.ReadKey();
+                     k = Console.ReadKey(intercept: true);
                     Console.WriteLine();
 
                     // Return chosen site's index if valid
@@ -270,10 +267,6 @@ namespace GestionaireMDP
                 // Return no chosen index
                 return INDEX_NOT_FOUND;   
             }
-
-  
-
-
         }
     }
 }
